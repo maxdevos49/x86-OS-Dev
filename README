@@ -1,0 +1,54 @@
+Learning x86 and System Development
+###################################
+
+After deciding I want to learn more about the lowest level of software 
+development and desire to break away from web development, I have decided
+to learn OS, Kernel, and Driver development using open resources. I plan 
+to document as much as I can for any others who wish to also learn.
+
+All code is a culmination of following the resources or applied knowledge 
+from the following links:
+    1. https://www.youtube.com/watch?v=MwPjvJ9ulSc
+    2. https://www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf
+    3. https://www.youtube.com/watch?v=7LTB4aLI7r0&list=PLxN4E629pPnKKqYsNVXpmCza8l0Jb6l8-
+
+Dependencies
+============
+    Mac:
+        $ brew install nasm
+        $ brew install qemu
+    Windows:
+        $ <Will accept pull request>
+    Linux:
+        $ <Will accept pull request>
+
+Exploring my code
+=================
+My standard entry point for any bootable programs will be in files named
+"boot.asm". In relative directories there may exist Makefiles to supplement
+the developing process
+
+Compiling 
+=========
+    $ nasm boot.asm -f bin -o boot.bin
+
+Running VM
+==========
+    Mac:
+        $ qemu-system-x86_64 boot.bin
+    Windows:
+        $ <Will accept pull request>
+    Linux:
+        $ <Will accept pull request>
+
+
+Bootable USB
+============
+    Mac:
+        $ sudo diskutil unmount /your/disk
+        $ sudo dd if=./boot.bin of=/your/disk
+    Windows:
+        $ <Will accept pull request>
+    Linux:
+        $ <Will accept pull request>
+
