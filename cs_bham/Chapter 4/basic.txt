@@ -1,0 +1,10 @@
+
+basic.o:	file format ELF32-i386
+
+Disassembly of section .text:
+my_function:
+       0:	55 	              pushl	%ebp
+       1:	89 e5 	              movl	%esp, %ebp
+       3:	b8 ba ba 00 00 	movl	$47802, %eax
+       8:	5d 	              popl	%ebp
+       9:	c3 	              retl

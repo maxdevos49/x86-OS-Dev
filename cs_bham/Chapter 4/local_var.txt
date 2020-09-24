@@ -1,0 +1,13 @@
+
+local_var.o:	file format ELF32-i386
+
+Disassembly of section .text:
+my_function:
+       0:	55 	                     pushl	%ebp
+       1:	89 e5 	                     movl	%esp, %ebp
+       3:	50 	                     pushl	%eax
+       4:	c7 45 fc ba ba 00 00 	movl	$47802, -4(%ebp)
+       b:	8b 45 fc 	              movl	-4(%ebp), %eax
+       e:	83 c4 04 	              addl	$4, %esp
+      11:	5d 	                     popl	%ebp
+      12:	c3 	                     retl

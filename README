@@ -17,6 +17,8 @@ Dependencies
     Mac:
         $ brew install nasm
         $ brew install qemu
+        $ brew install x86_64-elf-gcc
+        $ brew install x86_64-elf-binutils
     Windows:
         $ <Will accept pull request>
     Linux:
@@ -26,14 +28,14 @@ Exploring my code
 =================
 My standard entry point for any bootable programs will be in files named
 "boot.asm". In relative directories there may exist Makefiles to supplement
-the developing process
+the development process
 
 Compiling 
 =========
     $ nasm boot.asm -f bin -o boot.bin
 
-Running VM
-==========
+Running VM/Emulator
+===================
     Mac:
         $ qemu-system-x86_64 boot.bin
     Windows:
