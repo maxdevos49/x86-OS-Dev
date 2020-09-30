@@ -1,6 +1,6 @@
 ; Constants(Think like c macros)
 PROGRAM_SPACE equ 0x8000  ; exactly 512 bytes after 0x7c00, The boot sector starting location
-SECTOR_COUNT equ 32
+SECTOR_COUNT equ 60
 
 ; Loads extended program
 read_disk:

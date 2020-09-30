@@ -1,32 +1,61 @@
 #include "IDT.h"
 #include "io.h"
 #include "text_print.h"
+#include "KB_scan_code_1.h"
 
-extern IDT64_t _idt[256];
-extern uint64_t isr1;
+extern IDT64_t _idt[256]; // 4096 byte IDT
+
+extern uint64_t isr1; // interupt service routine one function pointer, Defined in assembly
+
 extern void load_IDT();
 
-void init_IDT(){
+void init_IDT()
+{
 
-    // uint8_t t;
-    // for(t = 0; t < 256; t++){
-        _idt[1].zero = 0;
-        _idt[1].offset_low = (uint16_t)(((uint64_t)&isr1 & 0x000000000000ffff));
-        _idt[1].offset_mid = (uint16_t)(((uint64_t)&isr1 & 0x00000000ffff0000) >> 16);
-        _idt[1].offset_high = (uint32_t)(((uint64_t)&isr1 & 0xffffffff00000000) >> 32);
-        _idt[1].ist = 0;
-        _idt[1].selector = 0x08;
-        _idt[1].types_attr = 0x8e;
-    // }
+    print_string("Defining IDT\n\r", DEFAULT_STYLE);
 
-    outb(0x21, 0xfd);
-    outb(0xa1, 0xff);
+    _idt[1].zero = 0;
+    _idt[1].offset_low = (uint16_t)(((uint64_t)&isr1 & 0x000000000000ffff));
+    _idt[1].offset_mid = (uint16_t)(((uint64_t)&isr1 & 0x00000000ffff0000) >> 16);
+    _idt[1].offset_high = (uint32_t)(((uint64_t)&isr1 & 0xffffffff00000000) >> 32);
+    _idt[1].ist = 0;
+    _idt[1].selector = 0x08;   //Code segment selector defined in gdt
+    _idt[1].types_attr = 0x8e; //Indicates it as a 32 bit interupt gate
 
+    print_string("Remapping PIC\n\r", DEFAULT_STYLE);
+
+    remap_pic();
+
+    print_string("Reprogramming PIC chip\n\r", DEFAULT_STYLE);
+
+    //Reprogram the PIC's with some magic code
+    outb(PIC1_DATA, 0xfd);
+    outb(PIC2_DATA, 0xff);
+
+    print_string("Loading IDT\n\r", DEFAULT_STYLE);
+
+    // Load IDT and reenable interrupts
     load_IDT();
 }
 
-extern void isr1_handler(){
-    print_string(hex_to_string(inb(0x60), sizeof(uint8_t)), DEFAULT_STYLE);
-    outb(0x20, 0x20);
-    outb(0xa0, 0x20);
+void (*main_keyboard_handler)(uint8_t, char); // This was a pain in the ass. Turns out function pointers are a definition + declartion so extern is required in header file
+
+extern void isr1_handler()
+{
+    uint8_t scan_code = inb(0x60);
+    uint8_t chr = 0;
+
+    if (scan_code < 0x3a)
+    {
+        chr = scan_code_lookup_table[scan_code];
+    }
+
+    if (main_keyboard_handler != 0) //function pointer is not null
+    {
+        main_keyboard_handler(scan_code, chr);
+    }
+
+    //Acknowledge the interrupt
+    outb(PIC1_COMMAND, 0x20);
+    outb(PIC2_COMMAND, 0x20);
 }

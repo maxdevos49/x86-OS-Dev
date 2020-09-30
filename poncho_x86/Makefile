@@ -8,12 +8,14 @@ RM = rm
 QEMU = qemu-system-x86_64
 NASM = nasm
 GDB = gdb
+BOCHS = bochs
 
 CFLAGS = -Wall -Ttext 0x8000 -ffreestanding -mno-red-zone -m64
 
+
 BIN = kernel.flp
 BINS = boot.bin
-OBJS = extended_program.o binaries.o kernel.o io.o IDT.o text_print.o
+OBJS = extended_program.o binaries.o kernel.o io.o IDT.o text_print.o keyboard.o memory_map.o heap.o
 
 all: $(BIN)
 
@@ -39,15 +41,19 @@ $(BIN): $(BINS) $(OBJS)
 	@$(NASM) -f bin $< -o $@
 
 # Run the executable in qemu
-run: $(BIN)
-	@$(ECHO) Running kernel in normal mode.
+qemu: $(BIN)
+	@$(ECHO) Running kernel in qemu.
 	@$(QEMU) -fda kernel.flp
+
+bochs: $(BIN)
+	@$(ECHO) Running kernel in boch
+	@$(BOCHS) -q -f bochsrc.txt
 
 # Run the executable in qemu with gdb attached
  # TODO work out gdb stuff
 debug: $(BIN)
 	@$(ECHO) Running kernel in debug mode.
-	@$(QEMU) -s -S -fda kernel.flp
+	@$(QEMU) -d int -no-reboot -no-shutdown -fda kernel.flp
 
 
 # Cleans the directory of any generated files
