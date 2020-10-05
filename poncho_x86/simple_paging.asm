@@ -3,14 +3,10 @@ PAGE_TABLE_ENTRY equ 0x1000
 setup_identity_paging:
     mov edi, PAGE_TABLE_ENTRY
     mov cr3, edi
-    
-    mov edi, cr3
-    
+   
     xor eax, eax
     mov ecx, 4096
     rep stosd
-
-    mov cr3, edi
     
     mov dword [edi], 0x2003
     add edi, 0x1000
