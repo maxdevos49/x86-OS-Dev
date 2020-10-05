@@ -29,7 +29,7 @@ setup_identity_paging:
     wrmsr
 
     mov eax, cr0
-    or eax, 1 << 31
+    or eax, 1 << 31 | 1 << 0
     mov cr0, eax
 
     ret

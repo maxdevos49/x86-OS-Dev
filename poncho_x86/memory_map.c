@@ -1,7 +1,10 @@
 #include "memory_map.h"
 #include "text_print.h"
 
-uint8_t usable_memory_regions_count = 0;
+#include <stddef.h>
+#include <stdbool.h>
+
+static uint8_t usable_memory_regions_count = 0;
 
 void print_memory_map(memory_map_entry_t *memory_map)
 {

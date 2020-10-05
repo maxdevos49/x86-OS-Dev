@@ -7,4 +7,4 @@
     %1_size: dq %1_size - %1
 %endmacro
 
-INC_BIN Testing, "test.txt"
+; INC_BIN Testing, "test.txt"

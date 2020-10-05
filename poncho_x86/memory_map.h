@@ -1,4 +1,4 @@
-#include "type_defs.h"
+#include <stdint.h>
 
 #ifndef __MEMORY_MAP__
 #define __MEMORY_MAP__

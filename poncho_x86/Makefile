@@ -1,5 +1,3 @@
-.PHONY: clean all debug
-
 CC = x86_64-elf-gcc
 CXX = x86_64-elf-g++
 LD = x86_64-elf-ld
@@ -8,55 +6,58 @@ RM = rm
 QEMU = qemu-system-x86_64
 NASM = nasm
 GDB = gdb
-BOCHS = bochs
+MKDIR = mkdir
 
-CFLAGS = -Wall -Ttext 0x8000 -ffreestanding -mno-red-zone -m64
-
+CFLAGS = -O1 -Wall -Ttext 0x8000 -ffreestanding -mno-red-zone -m64
 
 BIN = kernel.flp
-BINS = boot.bin
-OBJS = extended_program.o binaries.o kernel.o io.o IDT.o text_print.o keyboard.o memory_map.o heap.o
+BINS = $(addprefix $(BINDIR)/, boot.bin)
+OBJS = $(addprefix $(OBJDIR)/, extended_program.o binaries.o kernel.o io.o IDT.o text_print.o keyboard.o memory_map.o heap.o random.o)
+OBJDIR = obj
+BINDIR = bin
+DISTDIR = dist
 
 all: $(BIN)
 
 # Assembles, Compiles, and links executable
-$(BIN): $(BINS) $(OBJS)
+$(BIN): $(BINDIR) $(OBJDIR) $(DISTDIR) $(BINS) $(OBJS)
 	@$(ECHO) Linking $@
-	@$(LD) -T"linker.ld" -o kernel.bin $(OBJS)
-	@cat boot.bin kernel.bin > $(BIN)
+	@$(LD) -T"linker.ld" -o $(BINDIR)/kernel.bin $(OBJS)
+	@cat $(BINDIR)/boot.bin $(BINDIR)/kernel.bin > $(DISTDIR)/$(BIN)
 
 # Compiles a c file into a object file
-%.o: %.c	
+$(OBJDIR)/%.o: %.c	
 	@$(ECHO) Compiling $<
-	@$(CC) $(CFLAGS) -c $<
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 # Assembles a asm file into a object file
-%.o: %.asm
+$(OBJDIR)/%.o: %.asm
 	@$(ECHO) Assembling $<
 	@$(NASM) -f elf64 $< -o $@
 
 # Assembles a asm file into a binary file
-%.bin: %.asm
+$(BINDIR)/%.bin: %.asm
 	@$(ECHO) Assembling $<
 	@$(NASM) -f bin $< -o $@
 
+$(OBJDIR):
+	@$(ECHO) Creating $@ directory
+	@$(MKDIR) $(OBJDIR)
+
+$(BINDIR):
+	@$(ECHO) Creating $@ directory
+	@$(MKDIR) $(BINDIR)
+
+$(DISTDIR):
+	@$(ECHO) Creating $@ directory
+	@$(MKDIR) $(DISTDIR)
+
 # Run the executable in qemu
-qemu: $(BIN)
+run: $(BIN)
 	@$(ECHO) Running kernel in qemu.
 	@$(QEMU) -fda kernel.flp
 
-bochs: $(BIN)
-	@$(ECHO) Running kernel in boch
-	@$(BOCHS) -q -f bochsrc.txt
-
-# Run the executable in qemu with gdb attached
- # TODO work out gdb stuff
-debug: $(BIN)
-	@$(ECHO) Running kernel in debug mode.
-	@$(QEMU) -d int -no-reboot -no-shutdown -fda kernel.flp
-
-
-# Cleans the directory of any generated files
+.PHONY: clean
 clean: 
 	@$(ECHO) Removing all generated files
-	@$(RM) -f *.o *.bin *.out *.flp *.log $(BIN) 
+	@$(RM) -rf $(DISTDIR) $(OBJDIR) $(BINDIR)

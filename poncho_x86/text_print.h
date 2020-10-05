@@ -1,4 +1,6 @@
-#include "type_defs.h"
+#include <stdint.h>
+#include <stddef.h>
+
 #include "text_color_codes.h"
 
 #ifndef __TEXT_PRINT__

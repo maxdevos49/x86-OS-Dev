@@ -1,5 +1,8 @@
+#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
+
 #include "text_print.h"
-#include "type_defs.h"
 #include "text_color_codes.h"
 #include "IDT.h"
 #include "keyboard.h"
@@ -37,5 +40,13 @@ void _start()
     print_string(hex_to_string((uint64_t)test_address_2, sizeof(uint64_t)), DEFAULT_STYLE);
     print_string("\n\r", DEFAULT_STYLE);
     print_string(hex_to_string((uint64_t)test_address_3, sizeof(uint64_t)), DEFAULT_STYLE);
+    print_string("\n\r", DEFAULT_STYLE);
+
+    free(test_address_1);
+    free(test_address_2);
+    free(test_address_3);
+
+    void *test_address_4 = malloc(0x10);
+    print_string(hex_to_string((uint64_t)test_address_4, sizeof(uint64_t)), DEFAULT_STYLE);
     print_string("\n\r", DEFAULT_STYLE);
 }

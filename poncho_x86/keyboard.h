@@ -1,4 +1,5 @@
-#include "type_defs.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 #ifndef __KEYBOARD__
 #define __KEYBOARD__

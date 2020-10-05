@@ -1,4 +1,7 @@
-#include "type_defs.h"
+#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
+
 
 #ifndef __HEAP__
 #define __HEAP__
@@ -17,5 +20,7 @@ struct memory_segment_header
 
 void initialize_heap(uint64_t heap_address, uint64_t heap_length);
 void *malloc(size_t size);
+void free(void *address);
+
 
 #endif

@@ -1,4 +1,4 @@
-#include "type_defs.h"
+#include <stdint.h>
 
 #ifndef __IDT__
 #define __IDT__

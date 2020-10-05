@@ -1,4 +1,4 @@
-#include "type_defs.h"
+#include <stdint.h>
 
 #ifndef __IO__
 #define __IO__
